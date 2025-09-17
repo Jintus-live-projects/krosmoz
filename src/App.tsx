@@ -1,19 +1,34 @@
 import { useState } from "react";
 import "./App.css";
-import { Button } from "./components/ui/button";
+import { Timer } from "./components/business/timer";
+import { TimerContext } from "./context/timer";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const initialTime = 30 * 60 * 1000; // 30 minutes in milliseconds
+  const [time, setTime] = useState(initialTime);
+  const [completion, setCompletion] = useState(0);
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setCount((count) => count + 1);
+      <TimerContext.Provider
+        value={{
+          initialTime,
+          time,
+          setTime,
+          completion,
+          setCompletion,
         }}
       >
-        Click me {count}
-      </Button>
+        <main className="grid place-items-center">
+          <div
+            className="bg-red-500 w-[calc(100%-var(--value))] h-4 justify-self-end"
+            style={{
+              "--value": `${completion * 100}%`,
+            }}
+          ></div>
+          <Timer />
+        </main>
+      </TimerContext.Provider>
     </>
   );
 }
