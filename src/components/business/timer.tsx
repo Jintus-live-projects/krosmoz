@@ -1,15 +1,21 @@
 import { TimerContext } from "@/context/timer";
-import { PauseIcon, PlayIcon } from "lucide-react";
+import { PauseIcon, PlayIcon, RotateCcwIcon } from "lucide-react";
 import { Duration } from "luxon";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, type ComponentProps } from "react";
 import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 
 const FPS = 60;
 
-export function Timer() {
+type Props = ComponentProps<"div">;
+
+export function Timer(props: Props) {
+  const { ...htmlProps } = props;
+
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const timerContext = useContext(TimerContext);
+  const isPlaying = intervalId !== null;
 
   useEffect(() => {
     if (timerContext.time === 0 && intervalId) {
@@ -33,6 +39,12 @@ export function Timer() {
     setIntervalId(interval);
   }
 
+  function reset() {
+    timerContext.setTime(timerContext.initialTime);
+    timerContext.setCompletion(0);
+    pause();
+  }
+
   function pause() {
     if (intervalId) {
       clearInterval(intervalId);
@@ -43,19 +55,36 @@ export function Timer() {
   const duration = Duration.fromMillis(timerContext.time);
 
   return (
-    <div className="py-2 px-4 rounded-lg bg-gray-700 border border-gray-600 flex items-center gap-4">
-      <span>{duration.toFormat("mm:ss")}</span>
-      <Button variant="secondary" size="icon" className="size-8" onClick={play}>
-        <PlayIcon />
-      </Button>
-      <Button
-        variant="secondary"
-        size="icon"
-        className="size-8"
-        onClick={pause}
-      >
-        <PauseIcon />
-      </Button>
-    </div>
+    <Card {...htmlProps}>
+      <CardContent className="flex items-center gap-4">
+        <span>{duration.toFormat("mm:ss")}</span>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-8"
+          onClick={reset}
+        >
+          <RotateCcwIcon />
+        </Button>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-8"
+          disabled={isPlaying}
+          onClick={play}
+        >
+          <PlayIcon />
+        </Button>
+        <Button
+          variant="secondary"
+          size="icon"
+          className="size-8"
+          disabled={!isPlaying}
+          onClick={pause}
+        >
+          <PauseIcon />
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
