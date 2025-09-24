@@ -1,3 +1,4 @@
+import type { GameState } from "@/context/game";
 import { LockIcon } from "lucide-react";
 import type { MouseEventHandler } from "react";
 import { Button } from "../ui/button";
@@ -11,13 +12,14 @@ import {
 
 type Props = {
   title: string;
-  status: "locked" | "unlocked" | "completed";
+  status: GameState;
   hint?: string;
   onStart?: MouseEventHandler<HTMLButtonElement>;
 };
 
 export function MiniGameCard(props: Props) {
   const { title, status, hint, onStart } = props;
+  const isHintVisible = status === "completed";
   return (
     <Card>
       <CardHeader>
@@ -27,7 +29,7 @@ export function MiniGameCard(props: Props) {
         <span className="justify-self-start text-foreground">Statut</span>
         {getStatusLabel(status)}
         <span className="justify-self-start text-foreground">Indice</span>
-        {hint ? <span>{hint}</span> : <LockIcon />}
+        {isHintVisible ? <span>{hint}</span> : <LockIcon />}
       </CardContent>
       <CardFooter className="flex-col items-stretch">
         <Button disabled={status !== "unlocked"} onClick={onStart}>
@@ -38,7 +40,7 @@ export function MiniGameCard(props: Props) {
   );
 }
 
-function getStatusLabel(status: Props["status"]) {
+function getStatusLabel(status: GameState) {
   switch (status) {
     case "locked":
       return "Verrouillé";

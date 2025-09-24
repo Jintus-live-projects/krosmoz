@@ -1,42 +1,27 @@
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useAnswerInput } from "@/hooks/answer-input";
 
 type Props = {
   answer: string;
-  hint: string;
-  onSuccess?: (hint: string) => void;
+  onSuccess: () => void;
 };
 
 export function Rebus(props: Props) {
-  const { answer, onSuccess, hint } = props;
-  const [value, setValue] = useState("");
-  const [valid, setValid] = useState<boolean | null>(null);
+  const { answer, onSuccess } = props;
 
-  function handleYeyboardEvent(event: React.KeyboardEvent<HTMLInputElement>) {
-    setValid(null);
-
-    if (event.key === "Enter") {
-      const isValid = value.toLowerCase() === answer.toLowerCase();
-      setValid(isValid);
-
-      if (!isValid) {
-        setValue("");
-      }
-
-      if (isValid) {
-        onSuccess?.(hint);
-      }
-    }
-  }
+  const { inputValue, setInputValue, invalid, handleKeyDown } = useAnswerInput(
+    answer,
+    onSuccess
+  );
   return (
     <div className="flex flex-col gap-4">
       <img src="/rebus.png" alt="Rebus" />
       <Input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
         placeholder="Votre réponse"
-        onKeyDown={handleYeyboardEvent}
-        aria-invalid={valid === false}
+        onKeyDown={handleKeyDown}
+        aria-invalid={invalid}
       />
     </div>
   );
