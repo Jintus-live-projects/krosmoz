@@ -14,6 +14,7 @@ export function useAnswerInput(
       setInvalid(false);
 
       if (event.key === "Enter" && (isValidable?.(inputValue) ?? true)) {
+        event.preventDefault();
         const isValid = inputValue.toLowerCase() === answer.toLowerCase();
         setInvalid(!isValid);
         onValidate?.(inputValue);

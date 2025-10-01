@@ -4,7 +4,8 @@ import {
   type GameAction,
   type GameState,
 } from "@/context/game";
-import { Motus } from "@/games/rebus/motus";
+import { Motus } from "@/games/motus/motus";
+import { Puzzle } from "@/games/puzzle/puzzle";
 import { Rebus } from "@/games/rebus/rebus";
 import { useReducer, type PropsWithChildren } from "react";
 
@@ -12,6 +13,7 @@ type GameControllerState = {
   games: Game[];
   currentGameIndex: number;
   finalAnswer: string;
+  isWin: boolean;
 };
 
 function gameStateReducer(state: GameControllerState, action: GameAction) {
@@ -32,27 +34,34 @@ function gameStateReducer(state: GameControllerState, action: GameAction) {
         currentGameIndex: state.currentGameIndex + 1,
       };
     }
+    case "win": {
+      return {
+        ...state,
+        isWin: true,
+      };
+    }
     default:
       return state;
   }
 }
 
 const initialState: GameControllerState = {
-  finalAnswer: "epee",
+  finalAnswer: "pandala",
   currentGameIndex: 0,
+  isWin: false,
   games: [
     {
-      hint: "combat",
-      answer: "tournoi",
+      hint: "spirituelle",
+      answer: "spirituelle",
       state: "unlocked",
     },
     {
-      hint: "arme",
-      answer: "arme",
+      hint: "origami",
+      answer: "origami",
       state: "locked",
     },
     {
-      hint: "chevalier",
+      hint: "dofus",
       answer: undefined,
       state: "locked",
     },
@@ -68,7 +77,7 @@ export function GameController(props: PropsWithChildren) {
       dispatch({ type: "complete", index });
     }
 
-    const answer = state.games[index].answer;
+    const answer = state.games[index]?.answer;
 
     switch (index) {
       case 0:
@@ -76,9 +85,9 @@ export function GameController(props: PropsWithChildren) {
       case 1:
         return <Motus answer={answer!} onSuccess={onSuccess} />;
       case 2:
-        return <div>Game 3</div>;
+        return <Puzzle onSuccess={onSuccess} />;
       default:
-        return <div>Unknown game</div>;
+        return <div>Rendez vous en terre Pandala</div>;
     }
   }
   return (

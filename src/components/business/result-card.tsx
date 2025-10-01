@@ -25,9 +25,13 @@ function GameResult({ game }: { game: Game }) {
 export function ResultCard(props: Props) {
   const { onSuccess, ...htmlProps } = props;
   const gameContext = useContext(GameContext)!;
+  function handleSuccess() {
+    gameContext.dispatch({ type: "win" });
+    onSuccess();
+  }
   const { inputValue, setInputValue, invalid, handleKeyDown } = useAnswerInput(
     gameContext.finalAnswer,
-    onSuccess
+    handleSuccess
   );
   return (
     <Card {...htmlProps}>

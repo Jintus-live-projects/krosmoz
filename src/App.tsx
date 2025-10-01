@@ -7,22 +7,9 @@ import { TimerContext } from "./context/timer";
 import { Home } from "./pages/home";
 
 function App() {
-  const initialTime = 0.5 * 60 * 1000; // 30 minutes in milliseconds
+  const initialTime = 15 * 60 * 1000; // 30 minutes in milliseconds
   const [time, setTime] = useState(initialTime);
   const [completion, setCompletion] = useState(0);
-  const [minigameOpen, setMinigameOpen] = useState(false);
-  const [hints, setHints] = useState<Array<string | undefined>>([
-    undefined,
-    undefined,
-    undefined,
-  ]);
-
-  function onMinigame1Success(hint: string) {
-    setMinigameOpen(false);
-    const newHints = [...hints];
-    newHints[0] = hint;
-    setHints(newHints);
-  }
 
   return (
     <>
