@@ -1,4 +1,5 @@
-import { useEffect, useReducer } from "react";
+import { Button } from "@/components/ui/button";
+import { useReducer } from "react";
 
 const PUZZLE_SIDE = 3;
 
@@ -61,23 +62,21 @@ const initialState: PuzzleState = {
 export function Puzzle(props: Props) {
   const { onSuccess } = props;
   const [state, dispatch] = useReducer(reducerFunction, initialState);
-  useEffect(() => {
-    if (state.isCompleted) {
-      onSuccess();
-    }
-  }, [state, onSuccess]);
   return (
-    <div
-      className={`grid grid-cols-${PUZZLE_SIDE} grid-rows-${PUZZLE_SIDE} mx-auto`}
-    >
-      {state.grid.flat().map((tile, index) => (
-        <Tile
-          key={index}
-          index={tile}
-          onClick={() => dispatch({ type: "MOVE_TILE", at: index })}
-        />
-      ))}
-    </div>
+    <>
+      <div
+        className={`grid grid-cols-${PUZZLE_SIDE} grid-rows-${PUZZLE_SIDE} mx-auto`}
+      >
+        {state.grid.flat().map((tile, index) => (
+          <Tile
+            key={index}
+            index={tile}
+            onClick={() => dispatch({ type: "MOVE_TILE", at: index })}
+          />
+        ))}
+      </div>
+      {state.isCompleted && <Button onClick={() => onSuccess()}>Fermer</Button>}
+    </>
   );
 }
 

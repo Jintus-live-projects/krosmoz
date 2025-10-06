@@ -15,7 +15,7 @@ export function Rebus(props: Props) {
   );
   return (
     <div className="flex flex-col gap-4">
-      <img src="/rebus.png" alt="Rebus" />
+      <img src="images/rebus.png" alt="Rebus" />
       <Input
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
